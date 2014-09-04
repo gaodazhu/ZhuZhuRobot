@@ -1,0 +1,94 @@
+> begin
+	+ request
+	- {ok}
+< begin
+
+// 机器人参数 用法 <bot name>
+! var name     = 环保小梦
+! var age      = 1
+! var gender   = 女
+! var location = 中国江苏省苏州市工业园区
+! var phone    = 13285107621
+! var email    = gaoz@shencai.cc
+! var baseurl  = http://42.159.152.47
+
+// 替换规则
+! sub +         = plus
+
+// 人称替换
+! person 俺    = 我
+
+// 数组 用法
+//  + 你有一件@colors衣服
+//  + 不错
+! array colors = 红色 红 绿色 绿 橙色 橙 黄色 黄 白色 白 黑色 黑
+  ^ 青色 青 蓝色 蓝 紫色 紫
+
+
++ 你好
+- 你好<get nickname>
+
++ 我是*
+- 你好<star>
+
++ 我刚[*]说了什么
+* <input> != undefined => 你说了:"<input>"
+- 你啥都没说呀，不要忽悠我！
+
++ 我*岁[*]
+* <star> >= 18 => 那你成年了呀
+- 还是小屁孩呀
+
+> object date javascript
+    return new Date();
+< object
+
++ 时间
+- <call>date</call>
+
++ [*]自动监控[*]
+* <get bindstate> == 未绑定 => {@绑定企业}
+- 最近24小时您的企业自动监控数据显示<get bindstate>正常，<get openid>无超标情况，COD最大值67.20，平均值45.45。（数据仅供参考）
+
+> topic drawpic
+
+< topic
+
++ [*]可用水量[*]
+* <get bindstate> == 未绑定 => {@绑定企业}
+- 你需要查询哪座城市{topic=water}
+
++ 绑定企业
+- 请先<a href="<bot baseurl>/bind?openid=<get openid>">点击绑定</a>帐号
+
+> topic water
+    + *
+    % 你需要查询哪座城市
+    - <star>截止至2014年8月14日，根据IC卡总量控制系统显示，您企业的可排放水量为2801.00吨，余量为12003.00吨。（数据仅供参考）
+
+    + [*]再查[*]
+    - 你需要查询哪座城市
+
+    + *
+    - 我查累了,要不我们聊聊别的话题{weight=1}
+    - 要不再查{weight=1}
+
+    + [*]好[*]
+    % 要不再查
+    @ 再查
+
+    + [*]不想[*]
+    % 要不再查
+    - 那我们聊点别的{topic=random}
+
+    + [*]好[*]
+    % [*]要不我们聊聊别的话题
+    - 那你想聊什么呢？{topic=random}
+
+< topic
+
++ [*]ic卡[*]
+- 截止至2014年8月14日，根据IC卡总量控制系统显示，您企业的可排放水量为2801.00吨，余量为12003.00吨。（数据仅供参考）
+
++ *
+- 伦家还听不懂呢，可以教教我哦！

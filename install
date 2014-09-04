@@ -1,0 +1,8 @@
+#enter project root path ,then run the following command in terminal
+npm install express
+npm install body-parser
+npm install jade
+npm install request
+
+npm install rivescript
+#修改rivescript.js 查找 0-9 替换为 0-9\u4E00-\u9FA5 使rivescript支持中文
